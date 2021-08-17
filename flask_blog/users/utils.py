@@ -1,8 +1,7 @@
 import os
 import secrets
 from PIL import Image
-from flask import url_for
-from flask_blog import app
+from flask import url_for, current_app
 from flask_mail import Message
 from flask_blog import mail
 
@@ -11,7 +10,9 @@ def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, "static/profile_pics/", picture_fn)
+    picture_path = os.path.join(
+        current_app.root_path, "static/profile_pics/", picture_fn
+    )
     # form_picture.save(picture_path)
 
     i = Image.open(form_picture)
@@ -34,7 +35,7 @@ If you did not make this request then simply ignore this email.
     mail.send(msg)
 
 
-# @app.route("/reset_password", methods=["GET", "POST"])
+# @current_app.route("/reset_password", methods=["GET", "POST"])
 # def request_reset():
 #     if current_user.is_authenticated:
 #         return redirect(url_for("main.home"))
@@ -47,7 +48,7 @@ If you did not make this request then simply ignore this email.
 #     return render_template("request_reset.html", title="Reset Password", form=form)
 
 
-# @app.route("/reset_password/<token>", methods=["GET", "POST"])
+# @current_app.route("/reset_password/<token>", methods=["GET", "POST"])
 # def reset_token(token):
 #     if current_user.is_authenticated:
 #         return redirect(url_for("main.home"))
