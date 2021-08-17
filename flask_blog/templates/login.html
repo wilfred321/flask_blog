@@ -45,13 +45,15 @@
 
         <div class="form-group">
             {{form.submit(class = "btn btn-outline-info")}}
+
+             <small class = "text-muted ml-2">
+            <a href = "{{url_for('request_reset')}}">Forgot Password? </a>
+            </small>
         </div>
 
-        <div>
-        <small class = "text-muted ml-2">
-        <a href = "{{url_for('request_reset')}}">Forgot Password? </a>
-        </small>
-        </div>
+     
+       
+       
 
     </form>
 
