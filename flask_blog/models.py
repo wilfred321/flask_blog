@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from sqlalchemy.orm import backref
 from flask_blog import db, login_manager, app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -40,6 +42,7 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    comments = db.Relationship("Comment", backref="post", lazy=True)
 
     def __repr__(self):
         return f"Post('{self.title}','{self.date_posted}')"
@@ -49,4 +52,4 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(100), nullable=False)
     timestamp = db.Column(db.Datetime, nullable=False, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey(""))
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
