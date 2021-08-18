@@ -42,7 +42,7 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    comments = db.Relationship("Comment", backref="post", lazy=True)
+    comments = db.relationship("Comment", backref="article", lazy=True)
 
     def __repr__(self):
         return f"Post('{self.title}','{self.date_posted}')"
@@ -51,5 +51,8 @@ class Post(db.Model):
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(100), nullable=False)
-    timestamp = db.Column(db.Datetime, nullable=False, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+
+    def __repr__(self):
+        return f"Comment('{self.body}', '{self.timestamp}')"

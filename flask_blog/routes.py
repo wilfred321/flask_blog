@@ -2,14 +2,16 @@ import secrets
 import os
 from flask import Flask, flash, redirect, render_template, url_for, request, abort
 from flask_blog.forms import (
+    CommentForm,
     RegistrationForm,
     LoginForm,
     UpdateAccountForm,
     PostForm,
     RequestResetForm,
     ResetPasswordForm,
+    CommentForm,
 )
-from flask_blog.models import User, Post
+from flask_blog.models import Comment, User, Post
 from flask_blog import app, db, bcrypt, mail
 from PIL import Image
 from flask_login import login_user, current_user, logout_user, login_required
@@ -139,6 +141,7 @@ def new_post():
 @app.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
+
     return render_template("post.html", title=post.title, post=post)
 
 
@@ -174,6 +177,25 @@ def delete_post(post_id):
     db.session.commit()
     flash("Your post has been deleted!", "success")
     return redirect(url_for("home"))
+
+
+@app.route("/post/<int:post_id>/comment", methods=["GET", "POST"])
+@login_required
+def add_comment(post_id):
+    ##first retrive the post
+    post = Post.query.get_or_404(post_id)
+
+    form = CommentForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            comment = Comment(body=form.body.data, post_id=post.id)
+            db.session.add(comment)
+            db.session.commit()
+            flash("Your have replied to this tweet", "success")
+            return redirect(url_for("post", post_id=post.id))
+    return render_template(
+        "comments.html", form=form, title="Post Comment", post_id=post_id
+    )
 
 
 def send_reset_email(user):
