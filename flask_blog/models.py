@@ -12,12 +12,14 @@ def load_user(user_id):
 
 
 class User(db.Model, UserMixin):
+    __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(), unique=True, nullable=False)
     image_file = db.Column(db.String(100), nullable=False, default="default.jpg")
     password = db.Column(db.String(100), nullable=False)
     posts = db.relationship("Post", backref="author", lazy=True)
+    comments = db.relationship("Comment", backref="commenter", lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config["SECRET_KEY"], expires_sec)
@@ -53,6 +55,7 @@ class Comment(db.Model):
     body = db.Column(db.String(100), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def __repr__(self):
-        return f"Comment('{self.body}', '{self.timestamp}')"
+        return f"Comment('{self.body}', '{self.timestamp}' by {self.user_id})"

@@ -52,8 +52,10 @@ def register():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
             "utf-8"
         )
+        username = form.username.data
+        capped_username = username.capitalize()
         user = User(
-            username=form.username.data, email=form.email.data, password=hashed_password
+            username=capped_username, email=form.email.data, password=hashed_password
         )
         db.session.add(user)
         db.session.commit()
@@ -187,8 +189,9 @@ def add_comment(post_id):
 
     form = CommentForm()
     if request.method == "POST":
+        user_id = current_user.id
         if form.validate_on_submit():
-            comment = Comment(body=form.body.data, post_id=post.id)
+            comment = Comment(body=form.body.data, post_id=post.id, user_id=user_id)
             db.session.add(comment)
             db.session.commit()
             flash("Your have replied to this tweet", "success")
