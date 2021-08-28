@@ -50,11 +50,14 @@ fields = [
     "query",
 ]
 
-url = f" http://ip-api.com/json/{query}?={fields}"
+url = f"http://ip-api.com/json/{query}?={fields}"
 
 r = requests.get(url)
 data = r.json()
-print(data["country"])
+print(type(data))
+for key, value in enumerate(data):
+    print(f"{key} = {data}")
+
 
 # response = requests.get(url)
 # print(response.status_code)

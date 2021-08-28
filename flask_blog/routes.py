@@ -21,6 +21,7 @@ from flask_mail import Message
 @app.route("/")
 @app.route("/home")
 def home():
+
     page = request.args.get("page", 1, type=int)
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
     return render_template("home.html", posts=posts)
@@ -29,6 +30,7 @@ def home():
 @app.route("/user/<string:username>")
 def user_posts(username):
     page = request.args.get("page", 1, type=int)
+
     user = User.query.filter_by(username=username).first_or_404()
     posts = (
         Post.query.filter_by(author=user)
@@ -196,9 +198,7 @@ def add_comment(post_id):
             db.session.commit()
             flash("Your have replied to this tweet", "success")
             return redirect(url_for("post", post_id=post.id))
-    return render_template(
-        "comments.html", form=form, title="Post Comment", post_id=post_id
-    )
+    return render_template("comments.html", form=form, post_id=post_id)
 
 
 def send_reset_email(user):

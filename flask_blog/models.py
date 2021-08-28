@@ -58,4 +58,4 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def __repr__(self):
-        return f"Comment('{self.body}', '{self.timestamp}' by {self.user_id})"
+        return f"Comment('{self.body}', '{self.timestamp}' by user {self.user_id})"
