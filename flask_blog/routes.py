@@ -2,14 +2,16 @@ import secrets
 import os
 from flask import Flask, flash, redirect, render_template, url_for, request, abort
 from flask_blog.forms import (
+    CommentForm,
     RegistrationForm,
     LoginForm,
     UpdateAccountForm,
     PostForm,
     RequestResetForm,
     ResetPasswordForm,
+    CommentForm,
 )
-from flask_blog.models import User, Post
+from flask_blog.models import Comment, User, Post
 from flask_blog import app, db, bcrypt, mail
 from PIL import Image
 from flask_login import login_user, current_user, logout_user, login_required
@@ -19,6 +21,7 @@ from flask_mail import Message
 @app.route("/")
 @app.route("/home")
 def home():
+
     page = request.args.get("page", 1, type=int)
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
     return render_template("home.html", posts=posts)
@@ -27,6 +30,7 @@ def home():
 @app.route("/user/<string:username>")
 def user_posts(username):
     page = request.args.get("page", 1, type=int)
+
     user = User.query.filter_by(username=username).first_or_404()
     posts = (
         Post.query.filter_by(author=user)
@@ -50,8 +54,10 @@ def register():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
             "utf-8"
         )
+        username = form.username.data
+        capped_username = username.capitalize()
         user = User(
-            username=form.username.data, email=form.email.data, password=hashed_password
+            username=capped_username, email=form.email.data, password=hashed_password
         )
         db.session.add(user)
         db.session.commit()
@@ -140,7 +146,12 @@ def new_post():
 @app.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
-    return render_template("post.html", title=post.title, post=post)
+    post_id = post.id
+    form = CommentForm()
+
+    return render_template(
+        "post.html", title=post.title, post=post, form=form, post_id=post_id
+    )
 
 
 @app.route("/post/<int:post_id>/update", methods=["GET", "POST"])
@@ -175,6 +186,22 @@ def delete_post(post_id):
     db.session.commit()
     flash("Your post has been deleted!", "success")
     return redirect(url_for("home"))
+
+
+@app.route("/post/<int:post_id>/comment", methods=["GET", "POST"])
+@login_required
+def comment(post_id):
+    ##first retrive the post
+    post = Post.query.get_or_404(post_id)
+    form = CommentForm()
+    if request.method == "POST":
+        user_id = current_user.id
+        if form.validate_on_submit():
+            comment = Comment(body=form.body.data, post_id=post.id, user_id=user_id)
+            db.session.add(comment)
+            db.session.commit()
+            flash("Your have replied to this tweet", "success")
+    return redirect(url_for("post", post_id=post.id))
 
 
 def send_reset_email(user):

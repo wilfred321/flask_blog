@@ -6,7 +6,7 @@
 <img class = "rounded-circle article-img" src = "{{url_for('static',filename='profile_pics/' + post.author.image_file)}}">
   <div class="media-body">
     <div class="article-metadata">
-      <a class="mr-2" href="#">{{ post.author.username }}</a>
+      <a class="mr-2" href="{{url_for('user_posts', username=post.author.username)}}">{{ post.author.username }}</a>
       <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d | %H: %M' ) }}</small>
       {%if current_user == post.author%}
       <div>
@@ -34,9 +34,69 @@
     </div>
     {%endif%}
 </div>
+<div>
     <h2 class="article-title">{{ post.title }}</h2>
     <p class="article-content">{{ post.content }}</p>
-  </div>
+</div>
+ <div>
+ <form method="POST" action="{{url_for('comment', post_id=post_id)}}">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <div class="form-group">
+                    {% if form.body.errors %}
+                        {{ form.body(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.body.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+
+
+                     <div class="input-group mb-3">
+                      {{ form.body(class="form-control form-control-lg" , placeholder="Enter your comment here") }}
+                       {{ form.submit(class="btn btn-outline-info ") }}
+                     
+                    </div>
+                       
+                       
+                    {% endif %}
+                            
+                
+              </div>
+            </fieldset>
+            
+        </form>
+
+
+       
+</div>
 </article>
+
+ 
+          {%if not post.comments%}
+            No comments
+          {%else%}
+        
+                {%for post in post.comments%}
+                <div class = "media content-section">
+                <img class = "rounded-circle comment-img" src = "{{url_for('static',filename='profile_pics/' + post.commenter.image_file)}}">
+                  <div class="media-body">
+                    <div class="article-metadata">
+                      <a class="mr-2" href="{{url_for('user_posts', username=post.commenter.username)}}">{{ post.commenter.username }}</a>
+                      <small class="text-muted">{{ post.timestamp.strftime('%Y-%m-%d | %H: %M' ) }}</small>
+                      </div>
+                          <p class="article-content">{{ post.body }}</p>
+                      </div>
+                    </div>
+                  
+                
+                {%endfor%}
+          
+          {%endif%}
+
+
+
+
 
 {%endblock%}

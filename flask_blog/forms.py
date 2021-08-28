@@ -66,12 +66,28 @@ class UpdateAccountForm(FlaskForm):
                 raise ValidationError(
                     "That email is taken, Please choose a different email"
                 )
+<<<<<<< HEAD
 
 
 class PostForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     content = TextAreaField("Content", validators=[DataRequired()])
     submit = SubmitField("Post")
+=======
+
+
+class PostForm(FlaskForm):
+    title = StringField("Title", validators=[DataRequired()])
+    content = TextAreaField(
+        "Content", validators=[DataRequired(), Length(min=2, max=100)]
+    )
+    submit = SubmitField("Post")
+
+
+class CommentForm(FlaskForm):
+    body = StringField("Comment", validators=[DataRequired()])
+    submit = SubmitField("Reply")
+>>>>>>> comments
 
 
 class RequestResetForm(FlaskForm):
