@@ -200,7 +200,7 @@ def comment(post_id):
             db.session.add(comment)
             db.session.commit()
             flash("Your have replied to this tweet", "success")
-    )return redirect(url_for("post", post_id=post.id))
+    return redirect(url_for("post", post_id=post.id))
 
 
 def send_reset_email(user):
