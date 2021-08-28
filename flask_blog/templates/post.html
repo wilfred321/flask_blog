@@ -38,9 +38,39 @@
     <h2 class="article-title">{{ post.title }}</h2>
     <p class="article-content">{{ post.content }}</p>
 </div>
+ <div>
+ <form method="POST" action="{{url_for('comment', post_id=post_id)}}">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <div class="form-group">
+                    {% if form.body.errors %}
+                        {{ form.body(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.body.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
 
 
- 
+                     <div class="input-group mb-3">
+                      {{ form.body(class="form-control form-control-lg" , placeholder="Enter your comment here") }}
+                       {{ form.submit(class="btn btn-outline-info ") }}
+                     
+                    </div>
+                       
+                       
+                    {% endif %}
+                            
+                
+              </div>
+            </fieldset>
+            
+        </form>
+
+
+       
+</div>
 </article>
 
  

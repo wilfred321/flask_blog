@@ -145,8 +145,12 @@ def new_post():
 @app.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
+    post_id = post.id
+    form = CommentForm()
 
-    return render_template("post.html", title=post.title, post=post)
+    return render_template(
+        "post.html", title=post.title, post=post, form=form, post_id=post_id
+    )
 
 
 @app.route("/post/<int:post_id>/update", methods=["GET", "POST"])
@@ -185,10 +189,9 @@ def delete_post(post_id):
 
 @app.route("/post/<int:post_id>/comment", methods=["GET", "POST"])
 @login_required
-def add_comment(post_id):
+def comment(post_id):
     ##first retrive the post
     post = Post.query.get_or_404(post_id)
-
     form = CommentForm()
     if request.method == "POST":
         user_id = current_user.id
@@ -197,8 +200,7 @@ def add_comment(post_id):
             db.session.add(comment)
             db.session.commit()
             flash("Your have replied to this tweet", "success")
-            return redirect(url_for("post", post_id=post.id))
-    return render_template("comments.html", form=form, post_id=post_id)
+    return redirect(url_for("post", post_id=post.id))
 
 
 def send_reset_email(user):
