@@ -24,12 +24,7 @@ def home():
 
     page = request.args.get("page", 1, type=int)
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
-    all_posts = Post.query.all()
-
-    for post in all_posts:
-        comments_count = len(post.comments)
-
-        return render_template("home.html", posts=posts, comment_count=comments_count)
+    return render_template("home.html", posts=posts)
 
 
 @app.route("/user/<string:username>")
@@ -151,7 +146,6 @@ def new_post():
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     post_id = post.id
-    comments_count = len(post.comments)
     form = CommentForm()
 
     return render_template(
@@ -160,7 +154,6 @@ def post(post_id):
         post=post,
         form=form,
         post_id=post_id,
-        comments_count=comments_count,
     )
 
 
@@ -214,7 +207,7 @@ def comment(post_id):
     return redirect(url_for("post", post_id=post.id))
 
 
-@app.route("/like/<int:post_id>/action", methods=["GET", "POST"])
+@app.route("/like/<int:post_id>/<action>")
 @login_required
 def like_action(post_id, action):
     post = Post.query.filter_by(id=post_id).first_or_404()
@@ -222,7 +215,7 @@ def like_action(post_id, action):
         current_user.like_post(post)
         db.session.commit()
 
-    if action == "unlike":
+    elif action == "unlike":
         current_user.unlike_post(post)
         db.session.commit()
 

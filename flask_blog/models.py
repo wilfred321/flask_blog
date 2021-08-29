@@ -26,14 +26,12 @@ class User(db.Model, UserMixin):
     # like and unlike methods
     def like_post(self, post):
         if not self.has_liked_post(post):
-            like = PostLike(user_id=self.user.id, post_id=self.post.id)
+            like = PostLike(user_id=self.id, post_id=post.id)
             db.session.add(like)
 
     def unlike_post(self, post):
         if self.has_liked_post(post):
-            PostLike.query.filter_by(
-                post_id=self.post.id, user_id=self.user.id
-            ).delete()
+            PostLike.query.filter_by(post_id=post.id, user_id=self.id).delete()
 
     def has_liked_post(self, post):
         return (
@@ -66,7 +64,7 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    comments = db.relationship("Comment", backref="article", lazy=True)
+    comments = db.relationship("Comment", backref="article", lazy="dynamic")
     likes = db.relationship("PostLike", backref="post", lazy="dynamic")
 
     def __repr__(self):

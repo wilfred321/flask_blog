@@ -15,13 +15,15 @@
             
             {%if current_user.is_authenticated%}
               {% if current_user.has_liked_post(post) %}
-              <a href = "{{url_for('like_action',post_id = post.id, action = 'unlike')}}">Unlike</a>
+              <a href = "{{url_for('like_action',post_id = post.id, action = 'unlike')}}" class="fas fa-heart"></a>
               {%else%}
-                <a href = "{{url_for('like_action',post_id = post.id, action = 'like')}}">Like</a>
+                <a href = "{{url_for('like_action',post_id = post.id, action = 'like')}}"  class="far fa-heart"></a>
               {%endif%}
+              {{post.likes.count()}} likes
             {%else%}
-            {{post.likes.count()}}
+            {{post.likes.count()}} likes
             {%endif%}
+           
 
         </div>
     </div>

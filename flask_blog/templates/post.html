@@ -11,14 +11,12 @@
       <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d | %H: %M' ) }}</small>
     <!--Comments,Likes and Unlikes-->
     <div class = "comment-align">  
-  <a class="far fa-comment-alt fa-lg" href = "{{url_for('post',post_id=post.id )}}"></a>
-              {{comments_count}}
+  <i class="far fa-comment-alt fa-lg"></i>
+  {{post.comments.count()}}
 
   <i class="far fa-heart fa-lg"></i>
-  {{comments_count}}
+  {{post.likes.count()}}
 
-  <i class="far fa-thumbs-down fa-lg"></i>
-  {{comments_count}}
   </div>
           
       {%if current_user == post.author%}
@@ -54,7 +52,7 @@
     <h2 class="article-title">{{ post.title }}</h2>
     <p class="article-content">{{ post.content }}</p>
 </div>
-
+{%if current_user.is_authenticated%}
  <div>
  <form method="POST" action="{{url_for('comment', post_id=post_id)}}">
             {{ form.hidden_tag() }}
@@ -88,6 +86,7 @@
 
        
 </div>
+{%endif%}
 </article>
 
  
@@ -97,22 +96,17 @@
         
                 {%for post in post.comments%}
                 <div class = "media content-section">
-                <img class = "rounded-circle comment-img" src = "{{url_for('static',filename='profile_pics/' + post.commenter.image_file)}}">
-                  <div class="media-body">
-                    <div class="article-metadata">
-                      <a class="mr-2" href="{{url_for('user_posts', username=post.commenter.username)}}">{{ post.commenter.username }}</a>
-                      <small class="text-muted">{{ post.timestamp.strftime('%Y-%m-%d | %H: %M' ) }}</small>
-                    </div>
-                   
-
-                          <p class="article-content">{{ post.body }}</p>
+                   <img class = "rounded-circle comment-img" src = "{{url_for('static',filename='profile_pics/' + post.commenter.image_file)}}">
+                   <div class="media-body">
+                      <div class="article-metadata">
+                        <a class="mr-2" href="{{url_for('user_posts', username=post.commenter.username)}}">{{ post.commenter.username }}</a>
+                        <small class="text-muted">{{ post.timestamp.strftime('%Y-%m-%d | %H: %M' ) }}</small>
                       </div>
+                          <p class="article-content">{{ post.body }}</p>
                     </div>
-                  
-                
+                  </div>              
                 {%endfor%}
-          
-          {%endif%}
+            {%endif%}
 
 
 
