@@ -5,15 +5,29 @@
 <article class="media content-section">
 <img class = "rounded-circle article-img" src = "{{url_for('static',filename='profile_pics/' + post.author.image_file)}}">
   <div class="media-body">
+  
     <div class="article-metadata">
       <a class="mr-2" href="{{url_for('user_posts', username=post.author.username)}}">{{ post.author.username }}</a>
       <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d | %H: %M' ) }}</small>
+    <!--Comments,Likes and Unlikes-->
+    <div class = "comment-align">  
+  <a class="far fa-comment-alt fa-lg" href = "{{url_for('post',post_id=post.id )}}"></a>
+              {{comments_count}}
+
+  <i class="far fa-heart fa-lg"></i>
+  {{comments_count}}
+
+  <i class="far fa-thumbs-down fa-lg"></i>
+  {{comments_count}}
+  </div>
+          
       {%if current_user == post.author%}
       <div>
       <a class = "btn btn-secondary btn-sm m-1" href = "{{url_for('update_post', post_id = post.id )}}">Update</a>
       <button type = "button" class = "btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
-      </div>    
-    </div>
+      </div> 
+      
+     </div>
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -33,11 +47,14 @@
         </div>
     </div>
     {%endif%}
+
+    
 </div>
 <div>
     <h2 class="article-title">{{ post.title }}</h2>
     <p class="article-content">{{ post.content }}</p>
 </div>
+
  <div>
  <form method="POST" action="{{url_for('comment', post_id=post_id)}}">
             {{ form.hidden_tag() }}
@@ -85,7 +102,9 @@
                     <div class="article-metadata">
                       <a class="mr-2" href="{{url_for('user_posts', username=post.commenter.username)}}">{{ post.commenter.username }}</a>
                       <small class="text-muted">{{ post.timestamp.strftime('%Y-%m-%d | %H: %M' ) }}</small>
-                      </div>
+                    </div>
+                   
+
                           <p class="article-content">{{ post.body }}</p>
                       </div>
                     </div>

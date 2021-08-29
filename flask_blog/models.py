@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy.orm import backref
+from sqlalchemy.sql.schema import ForeignKey
 from flask_blog import db, login_manager, app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -20,6 +21,27 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(100), nullable=False)
     posts = db.relationship("Post", backref="author", lazy=True)
     comments = db.relationship("Comment", backref="commenter", lazy=True)
+    liked = db.relationship("PostLike", backref="user", lazy="dynamic")
+
+    # like and unlike methods
+    def like_post(self, post):
+        if not self.has_liked_post(post):
+            like = PostLike(user_id=self.user.id, post_id=self.post.id)
+            db.session.add(like)
+
+    def unlike_post(self, post):
+        if self.has_liked_post(post):
+            PostLike.query.filter_by(
+                post_id=self.post.id, user_id=self.user.id
+            ).delete()
+
+    def has_liked_post(self, post):
+        return (
+            PostLike.query.filter(
+                PostLike.user_id == self.id, PostLike.post_id == post.id
+            ).count()
+            > 0
+        )
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config["SECRET_KEY"], expires_sec)
@@ -45,6 +67,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     comments = db.relationship("Comment", backref="article", lazy=True)
+    likes = db.relationship("PostLike", backref="post", lazy="dynamic")
 
     def __repr__(self):
         return f"Post('{self.title}','{self.date_posted}')"
@@ -59,3 +82,10 @@ class Comment(db.Model):
 
     def __repr__(self):
         return f"Comment('{self.body}', '{self.timestamp}' by user {self.user_id})"
+
+
+class PostLike(db.Model):
+    __tablename__ = "post_like"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"))

@@ -22,41 +22,41 @@
 #     print( f' {index}. Post title: {post.title}\n Post Content: {post.content}')
 #     index += 1
 
-import socket
-import requests
-import json
+# import socket
+# import requests
+# import json
 
-hostname = socket.gethostname()
-IPAddr = socket.gethostbyname(hostname)
-print(IPAddr)
-print(hostname)
+# hostname = socket.gethostname()
+# IPAddr = socket.gethostbyname(hostname)
+# print(IPAddr)
+# print(hostname)
 
-query = IPAddr
-fields = [
-    "status",
-    "message",
-    "country",
-    "countryCode",
-    "region",
-    "regionName",
-    "city",
-    "zip",
-    "lat",
-    "lon",
-    "timezone",
-    "isp",
-    "org",
-    "as",
-    "query",
-]
+# query = IPAddr
+# fields = [
+#     "status",
+#     "message",
+#     "country",
+#     "countryCode",
+#     "region",
+#     "regionName",
+#     "city",
+#     "zip",
+#     "lat",
+#     "lon",
+#     "timezone",
+#     "isp",
+#     "org",
+#     "as",
+#     "query",
+# ]
 
-url = f"http://ip-api.com/json/{query}?={fields}"
+# url = f"http://ip-api.com/json/{query}?={fields}"
 
-r = requests.get(url)
-data = r.json()
-print(type(data))
-for key, value in enumerate(data):
-    print(f"{key} = {data}")
+# r = requests.get(url)
+# data = r.json()
+# print(type(data))
+# for key, value in enumerate(data):
+#     print(f"{key} = {data}")
 
 
 # response = requests.get(url)
@@ -77,3 +77,7 @@ for key, value in enumerate(data):
 # print(ip)
 # print(org)
 # print(city)
+
+
+names = ["john", "Micheal", "Kelvin"]
+print(len(names))
