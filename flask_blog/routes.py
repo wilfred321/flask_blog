@@ -54,8 +54,8 @@ def register():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
             "utf-8"
         )
-        username = form.username.data
-        capped_username = username.capitalize()
+
+        capped_username = form.username.data.capitalize()
         user = User(
             username=capped_username, email=form.email.data, password=hashed_password
         )
@@ -220,6 +220,14 @@ def like_action(post_id, action):
         db.session.commit()
 
     return redirect(request.referrer)
+
+
+@app.route("/post/<int:post_id>/post_details")
+def post_details(post_id):
+
+    post = Post.query.filter_by(id=post_id).first()
+
+    return render_template("post_details.html", post=post, title="Post Details")
 
 
 def send_reset_email(user):

@@ -10,21 +10,31 @@
       <a class="mr-2" href="{{url_for('user_posts', username=post.author.username)}}">{{ post.author.username }}</a>
       <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d | %H: %M' ) }}</small>
     <!--Comments,Likes and Unlikes-->
-    <div class = "comment-align">  
-  <i class="far fa-comment-alt fa-lg"></i>
-  {{post.comments.count()}}
+            <div class = "comment-align">  
+              <a class="fas fa-info-circle fa-lg " style = "color:gray;padding-right:1em" href = "{{url_for('post_details',post_id = post.id)}}"></a>
+            
+              <i class="far fa-comment-alt fa-lg" ></i>
+              {{post.comments.count()}}
+              
+            
+              {%if current_user.is_authenticated%}
+                {% if current_user.has_liked_post(post) %}
+                <a href = "{{url_for('like_action',post_id = post.id, action = 'unlike')}}" class="fas fa-heart like"></a>
+                {%else%}
+                  <a href = "{{url_for('like_action',post_id = post.id, action = 'like')}}"  class="far fa-heart unlike" ></a>
+                {%endif%}
+                {{post.likes.count()}}
+              
+              {%endif%}
 
-  <i class="far fa-heart fa-lg"></i>
-  {{post.likes.count()}}
-
-  </div>
+           </div>
           
-      {%if current_user == post.author%}
-      <div>
-      <a class = "btn btn-secondary btn-sm m-1" href = "{{url_for('update_post', post_id = post.id )}}">Update</a>
-      <button type = "button" class = "btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
-      </div> 
-      
+      {%if current_user == post.author %}
+        <div>
+          <a class = "btn btn-secondary btn-sm m-1" href = "{{url_for('update_post', post_id = post.id )}}">Update</a>
+          <button type = "button" class = "btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+        </div> 
+        
      </div>
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

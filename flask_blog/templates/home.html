@@ -11,20 +11,13 @@
       <a class="mr-2" href="{{url_for('user_posts', username=post.author.username)}}">{{ post.author.username }}</a>
       <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d | %H: %M' ) }}</small>
 
-       <div class = "comment-align">  
-            
-            {%if current_user.is_authenticated%}
-              {% if current_user.has_liked_post(post) %}
-              <a href = "{{url_for('like_action',post_id = post.id, action = 'unlike')}}" class="fas fa-heart"></a>
-              {%else%}
-                <a href = "{{url_for('like_action',post_id = post.id, action = 'like')}}"  class="far fa-heart"></a>
-              {%endif%}
-              {{post.likes.count()}} likes
-            {%else%}
-            {{post.likes.count()}} likes
-            {%endif%}
-           
+       <div class = "comment-align">    
+              <i class="far fa-comment-alt fa-lg"></i>
+              {{post.comments.count()}}
 
+              <i class="far fa-heart fa-lg"></i>
+              {{post.likes.count()}}
+            
         </div>
     </div>
     <h2><a class="article-title" href="{{url_for('post',post_id=post.id )}}">{{ post.title }}</a></h2>

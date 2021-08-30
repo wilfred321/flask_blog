@@ -33,6 +33,15 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 20px;
 }
 
+.comment-section {
+  background: #ffffff;
+  padding: 5px 10px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+ 
+}
+
 .article-title {
   color: #444444;
 }
@@ -95,4 +104,14 @@ a.article-title:hover {
 
 .comment-align{
   text-align: right;
+}
+
+.unlike{
+color:gray;
+padding-left: 1em;
+}
+
+.like{
+  color:red;
+  padding-left: 1em;
 }
