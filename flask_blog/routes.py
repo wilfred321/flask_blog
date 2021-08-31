@@ -1,6 +1,15 @@
 import secrets
 import os
-from flask import Flask, flash, redirect, render_template, url_for, request, abort
+from flask import (
+    Flask,
+    flash,
+    redirect,
+    render_template,
+    url_for,
+    request,
+    abort,
+    jsonify,
+)
 from flask_blog.forms import (
     CommentForm,
     RegistrationForm,
@@ -275,3 +284,68 @@ def reset_token(token):
         flash("Your account has been Updated! You are now able to login", "success")
         return redirect(url_for("login"))
     return render_template("reset_token.html", title="Reset Password", form=form)
+
+
+# API to return all the posts belonging to a particular user
+
+
+@app.route("/api/posts/<int:post_id>")
+def posts_api(post_id):
+    """Returns details about a single post"""
+
+    # make sure post exists
+    post = Post.query.get(post_id)
+
+    if post is None:
+        return jsonify({"error": "Invalid post ID"}), 422
+
+    # Get all comments associated with the selected post
+    comments = post.comments
+    # comments_body = []
+    comments_summary = []
+    for comment in comments:
+
+        comments_summary.append(comment.body)
+
+    return jsonify(
+        {
+            "post_title": post.title,
+            "post_body": post.content,
+            "date_posted": post.date_posted,
+            "post_author": post.author.email,
+            "comments": comments_summary,
+        }
+    )
+
+
+@app.route("/api/users/<int:user_id>")
+def users_api(user_id):
+    user = User.query.get(user_id)
+
+    if user is None:
+        return jsonify({"error": "Invalid User ID"}), 422
+
+    user_posts = []
+    posts = Post.query.filter_by(user_id=user.id)
+    for post in posts:
+        user_posts.append(post.title)
+
+    comments_body = []
+    comments_time = []
+    comments = Comment.query.filter_by(user_id=user.id)
+    for comment in comments:
+        comments_body.append(comment.body)
+        comments_time.append(comment.timestamp)
+
+    return jsonify(
+        {
+            "username": user.username,
+            "user email": user.email,
+            "user_posts": user_posts,
+            "user_comments": {
+                "comments_body": comments_body,
+                "comment_time": comments_time,
+            },
+            "user_image": user.image_file,
+        }
+    )
