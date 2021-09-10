@@ -9,7 +9,7 @@ from flask_blog.models import Post, User
 from flask_login import current_user, login_required, logout_user, login_user
 from flask_blog.users.utils import save_picture, send_reset_email
 from flask_mail import Message
-from flask_blog import db, bcrypt, mail
+from flask_blog import db, bcrypt, mail, oauth
 from flask import Blueprint, render_template, redirect, flash, url_for, request
 
 users = Blueprint("users", __name__)
@@ -48,6 +48,11 @@ def login():
         else:
             flash("Login Unsuccessful, Please check email and password!", "danger")
     return render_template("login.html", title="Login", form=form)
+
+
+@users.route("/login")
+def google_login():
+    pass
 
 
 @users.route("/logout")

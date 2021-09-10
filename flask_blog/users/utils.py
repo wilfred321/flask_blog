@@ -1,9 +1,12 @@
 import os
 import secrets
 from PIL import Image
-from flask import url_for, current_app
+from flask import url_for, current_app,
 from flask_mail import Message
-from flask_blog import mail
+from flask_blog import mail,oauth
+
+
+# RESIZE AND SAVE PICTURE
 
 
 def save_picture(form_picture):
@@ -23,6 +26,9 @@ def save_picture(form_picture):
     return picture_fn
 
 
+# SEND RESET EMAIL
+
+
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message(
@@ -34,6 +40,21 @@ If you did not make this request then simply ignore this email.
 """
     mail.send(msg)
 
+#REGISTER APP FOR OAUTH
+
+def register():
+    google = oauth.register(
+    name = 'google',
+    client_id = '88130896554-jgfjq4g536lerid3l3or0mpu306k30ou.apps.googleusercontent.com',
+    client_secret = 'FU84RphdKR-A_IwpT5MPRoss',
+    access_token_url = 'https://accounts.google.com/o/oauth2/token',
+    access_token_params = None,
+    authorize_url = 'https://accounts.google.com/o/oauth2/auth',
+    authorize_params = None,
+    api_base_url = 'https://www.googleapis.com/oauth2/v1/',
+    client_kwargs = {'scope':'openid profile email'},
+)
+    return google
 
 # @current_app.route("/reset_password", methods=["GET", "POST"])
 # def request_reset():

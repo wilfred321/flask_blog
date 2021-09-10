@@ -12,3 +12,9 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.getenv("EMAIL_USER")
     MAIL_PASSWORD = os.getenv("EMAIL_PASS")
+
+    # OAUTH KEYS
+    CLIENT_ID = (
+        "88130896554-jgfjq4g536lerid3l3or0mpu306k30ou.apps.googleusercontent.com",
+    )
+    CLIENT_SECRET = "FU84RphdKR-A_IwpT5MPRoss"

@@ -10,6 +10,7 @@ from flask_blog.config import Config
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 mail = Mail()
+oauth = OAuth()
 
 
 login_manager = LoginManager()
@@ -26,6 +27,7 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
+    oauth.init_app(app)
 
     from flask_blog.users.routes import users
     from flask_blog.main.routes import main

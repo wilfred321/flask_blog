@@ -79,3 +79,16 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
+
+.oauth-padding{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.oauth-selection{
+  text-align: center;
+}
+#oauth-text{
+  font-size: larger;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
