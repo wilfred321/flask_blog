@@ -1,6 +1,7 @@
 import secrets
 import os
 from flask import Flask, flash, redirect, render_template, url_for, request, abort
+from flask_blog import app
 from flask_blog.forms import (
     CommentForm,
     RegistrationForm,

@@ -79,5 +79,32 @@
 # print(city)
 
 
-names = ["john", "Micheal", "Kelvin"]
-print(len(names))
+# names = ["john", "Micheal", "Kelvin"]
+# print(len(names))
+# import urlopen
+# import urllib3
+
+
+# def __call_api():
+#     request = urllib3.request("https://www.google.com")
+#     response = urlopen(request)
+#     return response.status_code
+
+
+# __call_api()
+import requests
+from requests.models import Response
+
+
+# def get_request(url):
+#     r = requests.get(url)
+#     return r.status_code
+
+
+# print(get_request("https://www.google.com"))
+
+
+payload = {"key1": "value1", "key2": "value2"}
+r = requests.post("https://httpbin.org/post", data=payload)
+response = Response(r)
+print(response.text)
