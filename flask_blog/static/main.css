@@ -35,6 +35,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .article-title {
   color: #444444;
+  font-family:sans-serif;
+  font-size: x-large;
+
 }
 
 a.article-title:hover {
@@ -89,8 +92,29 @@ a.article-title:hover {
   text-align: center;
 
 }
+
 #oauth-text{
   font-size: larger;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.oauth-icons{
+  color: grey;
+}
+:hover.oauth-icons{
+  color:rgb(7, 63, 3); 
+  
+}
+
+#h2 {
+  width: 100%; 
+  text-align: center; 
+  border-bottom: 1px solid #dddddd; 
+  line-height: 0.1em;
+  margin: 10px 0 20px; 
+} 
+
+#h2 span { 
+   background:#fff; 
+   padding:0 10px; 
+}
