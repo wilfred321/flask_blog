@@ -10,15 +10,31 @@ from flask_login import current_user, login_required, logout_user, login_user
 from flask_blog.users.utils import save_picture, send_reset_email
 from flask_mail import Message
 from flask_blog import db, bcrypt, mail, oauth
-from flask import Blueprint, render_template, redirect, flash, url_for, request
+from flask import Blueprint, render_template, redirect, flash, url_for, request, session
+
+import flask_blog
 
 users = Blueprint("users", __name__)
+
+
+google = oauth.register(
+    name="google",
+    client_id="88130896554-jgfjq4g536lerid3l3or0mpu306k30ou.apps.googleusercontent.com",
+    client_secret="FU84RphdKR-A_IwpT5MPRoss",
+    access_token_url="https://accounts.google.com/o/oauth2/token",
+    access_token_params=None,
+    authorize_url="https://accounts.google.com/o/oauth2/auth",
+    authorize_params=None,
+    api_base_url="https://www.googleapis.com/oauth2/v1/",
+    client_kwargs={"scope": "openid profile email"},
+)
 
 
 @users.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
+
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
@@ -38,26 +54,90 @@ def register():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get("next")
+            flash("You have been logged in", "success")
             return redirect(next_page) if next_page else redirect(url_for("main.home"))
         else:
             flash("Login Unsuccessful, Please check email and password!", "danger")
     return render_template("login.html", title="Login", form=form)
 
+    # User.query.filter_by(email=session["email"]).first():
+    # user = User.query.filter_by(email=session["email"]).first()
+    # login_user(user)
+    # next_page = request.args.get("next")
+    # return redirect(next_page) if next_page else redirect(url_for("main.home"))
 
-@users.route("/login")
+    # else:
+    #     flash("Login Unsuccessful, Please check email and password!", "danger")
+
+    # form = LoginForm()
+    # if form.validate_on_submit():
+    #     user = User.query.filter_by(email=form.email.data).first()
+    #     if user and bcrypt.check_password_hash(user.password, form.password.data):
+    #         login_user(user, remember=form.remember.data)
+    #         next_page = request.args.get("next")
+    #         return redirect(next_page) if next_page else redirect(url_for("main.home"))
+    #     else:
+    #         flash("Login Unsuccessful, Please check email and password!", "danger")
+    # return render_template("login.html", title="Login", form=form)
+
+
+# GOOGLE OAUTH LOGIN
+
+
+@users.route("/google_redirect")
+def google_redirect():
+    google = oauth.create_client("google")
+    redirect_uri = url_for("users.authorize", _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+
+@users.route("/google_login")
 def google_login():
-    pass
+
+    saved_email = session["email"]
+    if not User.query.filter_by(email=saved_email).first():
+        flash(
+            "Login Unsuccessful, Please check your google address and login again!",
+            "danger",
+        )
+        return redirect(url_for("users.login"))
+    else:
+
+        user = User.query.filter_by(email=saved_email).first()
+        login_user(user)
+        next_page = request.args.get("next")
+        flash("You have been logged in", "success")
+        return redirect(next_page) if next_page else redirect(url_for("main.home"))
+
+
+@users.route("/authorize")
+def authorize():
+    google = oauth.create_client("google")
+    token = google.authorize_access_token()
+    resp = google.get("userinfo")
+    user_info = resp.json()
+    # do something with the token and user_info
+    session["email"] = user_info["email"]
+    return redirect("/google_login")
+
+
+# @users.route("/protected_area")
+# def protected_area():
+
+#     return f"Hello World {session['email']}"
 
 
 @users.route("/logout")
 def logout():
     logout_user()
+    session.clear()
     flash("You have successfully logged out.", "success")
     return redirect(url_for("main.home"))
 

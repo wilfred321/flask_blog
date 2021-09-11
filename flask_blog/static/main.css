@@ -81,14 +81,16 @@ a.article-title:hover {
 }
 
 .oauth-padding{
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 .oauth-selection{
   text-align: center;
+
 }
 #oauth-text{
   font-size: larger;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
