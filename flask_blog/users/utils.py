@@ -41,6 +41,17 @@ If you did not make this request then simply ignore this email.
     mail.send(msg)
 
 
+# send account_creation_email
+def send_account_created_email():
+    msg = Message(
+        "Confirm your Account",
+        sender="noreply@demo.com",
+        recipients=["owobuwilfred@gmail.com"],
+    )
+    msg.body = f"""Account has been created for owobuwilfred@gmail.com """
+    mail.send(msg)
+
+
 # REGISTER APP FOR OAUTH
 
 

@@ -7,8 +7,13 @@ from flask_blog.users.forms import (
 )
 from flask_blog.models import Post, User
 from flask_login import current_user, login_required, logout_user, login_user
-from flask_blog.users.utils import save_picture, send_reset_email
-from flask_mail import Message
+from flask_blog.users.utils import (
+    save_picture,
+    send_reset_email,
+    send_account_created_email,
+)
+
+
 from flask_blog import db, bcrypt, mail, oauth
 from flask import Blueprint, render_template, redirect, flash, url_for, request, session
 
@@ -45,9 +50,25 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
-        flash("Your account has been created! You are now able to login", "success")
-        return redirect(url_for("users.login"))
+        send_account_created_email()
+        flash(
+            "Your account has been created! Please confirm and proceed to login.",
+            "success",
+        )
+
+        return render_template(
+            "register_success.html",
+            title="Register_success",
+            email=form.email.data,
+        )
     return render_template("register.html", title="Register", form=form)
+
+
+@users.route("/register_success")
+def register_success():
+    title = "Register Success"
+
+    return render_template("register_success.html", title=title)
 
 
 @users.route("/login", methods=["GET", "POST"])
@@ -66,26 +87,6 @@ def login():
         else:
             flash("Login Unsuccessful, Please check email and password!", "danger")
     return render_template("login.html", title="Login", form=form)
-
-    # User.query.filter_by(email=session["email"]).first():
-    # user = User.query.filter_by(email=session["email"]).first()
-    # login_user(user)
-    # next_page = request.args.get("next")
-    # return redirect(next_page) if next_page else redirect(url_for("main.home"))
-
-    # else:
-    #     flash("Login Unsuccessful, Please check email and password!", "danger")
-
-    # form = LoginForm()
-    # if form.validate_on_submit():
-    #     user = User.query.filter_by(email=form.email.data).first()
-    #     if user and bcrypt.check_password_hash(user.password, form.password.data):
-    #         login_user(user, remember=form.remember.data)
-    #         next_page = request.args.get("next")
-    #         return redirect(next_page) if next_page else redirect(url_for("main.home"))
-    #     else:
-    #         flash("Login Unsuccessful, Please check email and password!", "danger")
-    # return render_template("login.html", title="Login", form=form)
 
 
 # GOOGLE OAUTH LOGIN
