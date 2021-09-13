@@ -50,7 +50,7 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
-        send_account_created_email()
+        send_account_created_email(user)
         flash(
             "Your account has been created! Please confirm and proceed to login.",
             "success",

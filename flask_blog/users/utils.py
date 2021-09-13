@@ -42,13 +42,13 @@ If you did not make this request then simply ignore this email.
 
 
 # send account_creation_email
-def send_account_created_email():
+def send_account_created_email(user):
     msg = Message(
         "Confirm your Account",
         sender="noreply@demo.com",
-        recipients=["owobuwilfred@gmail.com"],
+        recipients=[user.email],
     )
-    msg.body = f"""Account has been created for owobuwilfred@gmail.com """
+    msg.body = f"""Account has been created for {user.email} """
     mail.send(msg)
 
 
