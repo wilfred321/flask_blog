@@ -68,22 +68,6 @@ class UpdateAccountForm(FlaskForm):
                 )
 
 
-<<<<<<< HEAD:flask_blog/forms.py
-class PostForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired()])
-    content = TextAreaField(
-        "Content", validators=[DataRequired(), Length(min=2, max=100)]
-    )
-    submit = SubmitField("Post")
-
-
-class CommentForm(FlaskForm):
-    body = StringField("Comment", validators=[DataRequired()])
-    submit = SubmitField("Reply")
-
-
-=======
->>>>>>> app_instances:flask_blog/users/forms.py
 class RequestResetForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     submit = SubmitField("Request Password")

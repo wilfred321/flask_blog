@@ -1,0 +1,47 @@
+{%extends "layout.html"%}
+{%block content%}
+<article class="media content-section">
+<img class = "rounded-circle article-img" src = "{{url_for('static',filename='profile_pics/' + post.author.image_file)}}">
+  <div class="media-body">
+  
+    <div class="article-metadata">
+      <a class="mr-2" href="#">{{ post.author.username }}</a>
+      <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d | %H: %M' ) }}</small>
+    </div>
+    <div>
+    <h2 class="article-title">{{ post.title }}</h2>
+    <p class="article-content">{{ post.content }}</p>
+</div>
+</article>
+
+<div class="media comment-section">
+<h3>People who commented this post</h3>
+</div>
+{%for comment in post.comments%}
+<article class="media content-section">
+  <img class = "rounded-circle comment-img " src = "{{url_for('static',filename='profile_pics/' + comment.commenter.image_file)}}">
+    <div class="article-metadata">
+      <a class="mr-2" href="#">{{ comment.commenter.username }}</a>
+      <small class="text-muted">{{ comment.commenter.email }}</small>
+    </div>
+</article>
+{%endfor%}
+
+
+<div class="media comment-section">
+<h3>People who liked this post</h3>
+</div>
+
+</article>
+{%for like in post.likes%}
+<article class="media content-section">
+  <img class = "rounded-circle comment-img " src = "{{url_for('static',filename='profile_pics/' + like.user.image_file)}}">
+    <div class="article-metadata">
+      <a class="mr-2" href="#">{{ like.user.username }}</a>
+      <small class="text-muted">{{ like.user.email }}</small>
+    </div>
+</article>
+{%endfor%}
+
+
+{%endblock%}

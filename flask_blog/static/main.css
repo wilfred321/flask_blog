@@ -155,15 +155,6 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
-<<<<<<< HEAD
-.comment-field{
-  height:1.5em;
-  width: 30em;
-}
-.comment-button{
-  height:1.9em;
-}
-=======
 
 
 .oauth-padding{
@@ -201,4 +192,3 @@ a.article-title:hover {
    background:#fff; 
    padding:0 10px; 
 }
->>>>>>> app_instances
