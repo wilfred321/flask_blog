@@ -175,10 +175,6 @@ a.article-title:hover {
 .oauth-icons{
   color: grey;
 }
-:hover.oauth-icons{
-  color:rgb(7, 63, 3); 
-  
-}
 
 #h2 {
   width: 100%; 
