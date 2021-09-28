@@ -53,17 +53,17 @@ def send_account_created_email(user):
     mail.send(msg)
 
 
-# def generate_passcode():
-#     numbers = string.digits
-#     passcode = "".join(random.choice(numbers) for i in range(6))
-#     return passcode
+def generate_passcode():
+    numbers = string.digits
+    passcode = "".join(random.choice(numbers) for i in range(6))
+    return passcode
 
 
-def send_passcode(user, passcode):
+def send_passcode(user_email, passcode):
     msg = Message(
         "Confirm Login",
         sender="noreply@demo.com",
-        recipients=[user.email],
+        recipients=[user_email],
     )
     msg.body = f"Your passcode is:  {passcode}"
     mail.send(msg)

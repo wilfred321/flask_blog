@@ -13,6 +13,7 @@ from flask_blog.users.utils import (
     send_reset_email,
     send_account_created_email,
     send_passcode,
+    generate_passcode,
 )
 
 
@@ -20,9 +21,6 @@ from flask_blog import db, bcrypt, mail, oauth
 from flask import Blueprint, render_template, redirect, flash, url_for, request, session
 
 import flask_blog
-
-import string
-import random
 
 users = Blueprint("users", __name__)
 
@@ -38,6 +36,8 @@ google = oauth.register(
     api_base_url="https://www.googleapis.com/oauth2/v1/",
     client_kwargs={"scope": "openid profile email"},
 )
+
+new_passcode = generate_passcode()
 
 
 @users.route("/register", methods=["GET", "POST"])
@@ -85,44 +85,52 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
+
+        user_email = user.email
+
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            return redirect(url_for("users.passcode"))
 
-        login_user(user, remember=form.remember.data)
-        next_page = request.args.get("next")
+            return redirect(url_for("users.passcode", user_email=user_email))
 
-        flash("You have been logged in", "success")
-        return redirect(next_page) if next_page else redirect(url_for("main.home"))
-
-    flash(
-        "Login Unsuccessful, Please ensure you enter the correct username and password!",
-        "danger",
-    )
-
+        flash(
+            "Login Unsuccessful, Please ensure you enter the correct username and password!",
+            "danger",
+        )
     return render_template("login.html", title="Login", form=form)
 
 
 # GOOGLE OAUTH LOGIN
 
 
-@users.route("/login/passcode", methods=["GET", "POST"])
-def passcode():
+@users.route("/login/passcode/<user_email>", methods=["GET", "POST"])
+def passcode(user_email):
 
     # send mail containing passcode
 
     form = PasscodeForm()
 
+    # numbers = string.digits
+    # passcode = "".join(random.choice(numbers) for i in range(6))
+    send_passcode(user_email, new_passcode)
+
     if form.validate_on_submit():
         # Generate passcode
-        user = User.query.filter_by(email="owobuwilfred@gmail.com").first()
-        # numbers = string.digits
-        # passcode = "".join(random.choice(numbers) for i in range(6))
-        passcode = "123456"
-        send_passcode(user, passcode)
 
-        if form.passcode.data == passcode:
-            flash("passcode is correct", "success")
-            pass
+        # user = User.query.filter_by(email=).first()
+
+        if form.passcode.data == new_passcode:
+            # print(form.passcode.data)
+            # flash("passcode is correct", "success")
+            user = User.query.filter_by(email=user_email).first()
+            login_user(user)
+            next_page = request.args.get("next")
+            flash("You have been logged in ", "success")
+            return redirect(next_page) if next_page else redirect(url_for("main.home"))
+
+        else:
+            flash(
+                f"passcode is incorrect {new_passcode}, {form.passcode.data}", "danger"
+            )
 
     return render_template("login_passcode.html", title="Enter Passcode", form=form)
 
