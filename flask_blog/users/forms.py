@@ -40,6 +40,13 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Login")
 
 
+class PasscodeForm(FlaskForm):
+    passcode = StringField(
+        "Passcode", validators=[DataRequired(), Length(min=6, max=6)]
+    )
+    submit = SubmitField("Submit")
+
+
 class UpdateAccountForm(FlaskForm):
     username = StringField(
         "Username", validators=[DataRequired(), Length(min=2, max=20)]

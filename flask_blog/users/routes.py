@@ -1,4 +1,5 @@
 from flask_blog.users.forms import (
+    PasscodeForm,
     RegistrationForm,
     LoginForm,
     UpdateAccountForm,
@@ -11,6 +12,7 @@ from flask_blog.users.utils import (
     save_picture,
     send_reset_email,
     send_account_created_email,
+    send_passcode,
 )
 
 
@@ -18,6 +20,9 @@ from flask_blog import db, bcrypt, mail, oauth
 from flask import Blueprint, render_template, redirect, flash, url_for, request, session
 
 import flask_blog
+
+import string
+import random
 
 users = Blueprint("users", __name__)
 
@@ -73,6 +78,7 @@ def register_success():
 
 @users.route("/login", methods=["GET", "POST"])
 def login():
+
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
 
@@ -80,16 +86,45 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            next_page = request.args.get("next")
-            flash("You have been logged in", "success")
-            return redirect(next_page) if next_page else redirect(url_for("main.home"))
-        else:
-            flash("Login Unsuccessful, Please check email and password!", "danger")
+            return redirect(url_for("users.passcode"))
+
+        login_user(user, remember=form.remember.data)
+        next_page = request.args.get("next")
+
+        flash("You have been logged in", "success")
+        return redirect(next_page) if next_page else redirect(url_for("main.home"))
+
+    flash(
+        "Login Unsuccessful, Please ensure you enter the correct username and password!",
+        "danger",
+    )
+
     return render_template("login.html", title="Login", form=form)
 
 
 # GOOGLE OAUTH LOGIN
+
+
+@users.route("/login/passcode", methods=["GET", "POST"])
+def passcode():
+
+    # send mail containing passcode
+
+    form = PasscodeForm()
+
+    if form.validate_on_submit():
+        # Generate passcode
+        user = User.query.filter_by(email="owobuwilfred@gmail.com").first()
+        # numbers = string.digits
+        # passcode = "".join(random.choice(numbers) for i in range(6))
+        passcode = "123456"
+        send_passcode(user, passcode)
+
+        if form.passcode.data == passcode:
+            flash("passcode is correct", "success")
+            pass
+
+    return render_template("login_passcode.html", title="Enter Passcode", form=form)
 
 
 @users.route("/google_redirect")

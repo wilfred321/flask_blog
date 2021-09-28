@@ -1,5 +1,6 @@
 import os
 import secrets
+import random, string
 from PIL import Image
 from flask import url_for, current_app
 from flask_mail import Message
@@ -49,6 +50,22 @@ def send_account_created_email(user):
         recipients=[user.email],
     )
     msg.body = f"""Account has been created for {user.email} """
+    mail.send(msg)
+
+
+# def generate_passcode():
+#     numbers = string.digits
+#     passcode = "".join(random.choice(numbers) for i in range(6))
+#     return passcode
+
+
+def send_passcode(user, passcode):
+    msg = Message(
+        "Confirm Login",
+        sender="noreply@demo.com",
+        recipients=[user.email],
+    )
+    msg.body = f"Your passcode is:  {passcode}"
     mail.send(msg)
 
 
