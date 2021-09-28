@@ -128,9 +128,7 @@ def passcode(user_email):
             return redirect(next_page) if next_page else redirect(url_for("main.home"))
 
         else:
-            flash(
-                f"passcode is incorrect {new_passcode}, {form.passcode.data}", "danger"
-            )
+            flash("passcode is incorrect Please enter the correct passcode", "danger")
 
     return render_template("login_passcode.html", title="Enter Passcode", form=form)
 
