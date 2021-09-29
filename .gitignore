@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 flask_blog_venv
 test_folder
+test2
 
 # C extensions
 *.so
