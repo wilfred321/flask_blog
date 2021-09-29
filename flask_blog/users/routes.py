@@ -37,8 +37,6 @@ google = oauth.register(
     client_kwargs={"scope": "openid profile email"},
 )
 
-new_passcode = generate_passcode()
-
 
 @users.route("/register", methods=["GET", "POST"])
 def register():
@@ -100,6 +98,8 @@ def login():
 
 
 # GOOGLE OAUTH LOGIN
+
+new_passcode = generate_passcode()
 
 
 @users.route("/login/passcode/<user_email>", methods=["GET", "POST"])
@@ -170,12 +170,6 @@ def authorize():
     # do something with the token and user_info
     session["email"] = user_info["email"]
     return redirect("/google_login")
-
-
-# @users.route("/protected_area")
-# def protected_area():
-
-#     return f"Hello World {session['email']}"
 
 
 @users.route("/logout")

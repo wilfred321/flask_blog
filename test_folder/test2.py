@@ -60,8 +60,6 @@
 
 import bcrypt
 
-salt = bcrypt.gensalt()
-print(salt)
 
 # password = b"super secret password"
 
