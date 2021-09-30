@@ -3,6 +3,7 @@ import os
 
 class Config:
     TEMPLATES_AUTO_RELOAD = True
+    FLASK_DEBUG = 1
     SECRET_KEY = "63f4ce6948a9d40a72191bb94b9c23fb"
     SQLALCHEMY_DATABASE_URI = "sqlite:///site.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
