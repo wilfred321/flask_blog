@@ -3,98 +3,104 @@
 {%block content%}
 
 <article class="media content-section">
-<img class = "rounded-circle article-img" src = "{{url_for('static',filename='profile_pics/' + post.author.image_file)}}">
+  <img class="rounded-circle article-img" src="{{url_for('static',filename='profile_pics/' + post.author.image_file)}}">
   <div class="media-body">
     <div class="article-metadata">
-      <a class="mr-2" href="{{url_for('users.user_posts', username=post.author.username)}}">{{ post.author.username }}</a>
+      <a class="mr-2" href="{{url_for('users.user_posts', username=post.author.username)}}">{{ post.author.username
+        }}</a>
       <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d | %H: %M' ) }}</small>
       {%if current_user == post.author%}
       <div>
-      <a class = "btn btn-secondary btn-sm m-1" href = "{{url_for('posts.update_post', post_id = post.id )}}">Update</a>
-      <button type = "button" class = "btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
-      </div>    
+        <a class="btn btn-secondary btn-sm m-1" href="{{url_for('posts.update_post', post_id = post.id )}}">Update</a>
+        <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal"
+          data-target="#deleteModal">Delete</button>
+      </div>
     </div>
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
-        
-        <div class="modal-header">
+
+          <div class="modal-header">
             <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+              <span aria-hidden="true">&times;</span>
             </button>
-        </div>
-       
-        <div class="modal-footer">
+          </div>
+
+          <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <form action = "{{url_for('posts.delete_post',post_id = post.id)}}" method = "post">
-            <input class = "btn btn-danger" type = "submit" value = "Delete">
+            <form action="{{url_for('posts.delete_post',post_id = post.id)}}" method="post">
+              <input class="btn btn-danger" type="submit" value="Delete">
             </form>
+          </div>
         </div>
-        </div>
+      </div>
+      {%endif%}
     </div>
-    {%endif%}
-</div>
-<div>
-    <h2 class="article-title">{{ post.title }}</h2>
-    <p class="article-content">{{ post.content }}</p>
-</div>
- <div>
- <form method="POST" action="{{url_for('posts.comment', post_id=post_id)}}">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                <div class="form-group">
-                    {% if form.body.errors %}
-                        {{ form.body(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.body.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
+    <div>
+      <h2 class="article-title">{{ post.title }}</h2>
+      <p class="article-content">{{ post.content }}</p>
+    </div>
+    <div>
+
+      <form method="POST" action="{{url_for('posts.comment', post_id=post_id)}}">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+          <div class="form-group">
+            {% if form.body.errors %}
+            {{ form.body(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.body.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
 
 
-                     <div class="input-group mb-3">
-                      {{ form.body(class="form-control form-control-lg" , placeholder="Enter your comment here") }}
-                       {{ form.submit(class="btn btn-outline-info ") }}
-                     
-                    </div>
-                       
-                       
-                    {% endif %}
-                            
-                
-              </div>
-            </fieldset>
-            
-        </form>
+            <div class="input-group mb-3">
+              {{ form.body(class="form-control form-control-lg" , placeholder="Enter your comment here") }}
+              {{ form.submit(class="btn btn-outline-info ") }}
+
+            </div>
 
 
-       
-</div>
+            {% endif %}
+
+
+          </div>
+        </fieldset>
+
+      </form>
+
+
+
+    </div>
 </article>
 
- 
-          {%if not post.comments%}
-            No comments
-          {%else%}
-        
-                {%for post in post.comments%}
-                <div class = "media content-section">
-                <img class = "rounded-circle comment-img" src = "{{url_for('static',filename='profile_pics/' + post.commenter.image_file)}}">
-                  <div class="media-body">
-                    <div class="article-metadata">
-                      <a class="mr-2" href="{{url_for('user_posts', username=post.commenter.username)}}">{{ post.commenter.username }}</a>
-                      <small class="text-muted">{{ post.timestamp.strftime('%Y-%m-%d | %H: %M' ) }}</small>
-                      </div>
-                          <p class="article-content">{{ post.body }}</p>
-                      </div>
-                    </div>
-                  
-                
-                {%endfor%}
-          
-          {%endif%}
+
+{%if not post.comments%}
+No comments
+{%else%}
+
+{%for post in post.comments%}
+<div class="media content-section">
+  <img class="rounded-circle comment-img"
+    src="{{url_for('static',filename='profile_pics/' + post.commenter.image_file)}}">
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="{{url_for('user_posts', username=post.commenter.username)}}">{{ post.commenter.username
+        }}</a>
+      <small class="text-muted">{{ post.timestamp.strftime('%Y-%m-%d | %H: %M' ) }}</small>
+    </div>
+    <p class="article-content">{{ post.body }}</p>
+  </div>
+</div>
+
+
+{%endfor%}
+
+{%endif%}
 
 
 

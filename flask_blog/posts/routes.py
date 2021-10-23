@@ -1,9 +1,9 @@
 from flask import Blueprint
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_blog import db
-from flask_blog.models import Post
+from flask_blog.models import Post, Comment
 from flask_login import current_user, login_required
-from flask_blog.posts.forms import PostForm
+from flask_blog.posts.forms import CommentForm, PostForm
 
 posts = Blueprint("posts", __name__)
 
@@ -64,6 +64,17 @@ def delete_post(post_id):
     return redirect(url_for("main.home"))
 
 
-@posts.route("/comments", methods=["GET", "POST"])
-def comment():
-    pass
+@posts.route("/post/<int:post_id>/comment", methods=["GET", "POST"])
+def comment(post_id):
+    # first retrieve the post
+    post = Post.query.get_or_404(post_id)
+    form = CommentForm()
+    if request.method == "POST":
+        user_id = current_user.id
+
+        if form.validate_on_submit:
+            comment = Comment(body=form.body.data, post_id=post.id, user_id=user_id)
+            db.session.add(comment)
+            db.session.commit()
+            flash("You replied to this post", "success")
+    return redirect(url_for("posts.post", post=post))
