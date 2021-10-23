@@ -18,6 +18,7 @@ from flask_blog.users.utils import (
     send_account_created_email,
     send_passcode,
     generate_passcode,
+    save_user,
 )
 
 
@@ -59,6 +60,7 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
+        save_user("registered_users.txt", user)
         send_account_created_email(user)
         flash(
             "Your account has been created! Please confirm and proceed to login.",
@@ -277,19 +279,21 @@ def admin():
 
     if request.method == "GET":
         users = User.query.all()
-        user = request.args.get("user")
+        deleted_user = request.args.get("deleted_user")
         # user = session.get("user")
-        if user != None:
+        if deleted_user != None:
 
             # flash(
             #     f"User with username {user.username} was deleted successfully",
             #     "success",
             # )
-            # return render_template(
-            #     "admin.html", title="admin-interface", users=users, user=user
-            # )
+            return render_template(
+                "admin.html",
+                title="admin-interface",
+                users=users,
+                deleted_user=deleted_user,
+            )
 
-            return f"<h1>{user}</h1>"
         else:
 
             # logging.info(user_id)
@@ -307,11 +311,12 @@ def admin_delete_user():
         user_id = request.form.get("selected_user")
         # session["user_id"] = user_id
         user = User.query.filter_by(id=user_id).first()
+        username = user.username
+        db.session.delete(user)
+        db.session.commit()
+        save_user("deleted_users.txt", user)
 
-        # db.session.delete(user)
-        # db.session.commit()
-
-    return redirect(url_for("users.admin", user=user))
+    return redirect(url_for("users.admin", deleted_user=username))
 
 
 @users.route("/display", methods=["GET", "POST"])

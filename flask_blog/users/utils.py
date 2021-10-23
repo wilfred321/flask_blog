@@ -69,6 +69,14 @@ def send_passcode(user_email, passcode):
     mail.send(msg)
 
 
+from datetime import datetime
+
+
+def save_user(filename, user):
+    with open(filename, "a") as file:
+        file.write(f"{user.username}, {user.email}, {datetime.now()} \n")
+
+
 # REGISTER APP FOR OAUTH
 
 
