@@ -62,3 +62,8 @@ def delete_post(post_id):
     db.session.commit()
     flash("Your post has been deleted!", "success")
     return redirect(url_for("main.home"))
+
+
+@posts.route("/comments", methods=["GET", "POST"])
+def comment():
+    pass
