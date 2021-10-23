@@ -1,4 +1,6 @@
 from logging import DEBUG
+
+# import logging
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
@@ -17,6 +19,10 @@ oauth = OAuth()
 login_manager = LoginManager()
 login_manager.login_view = "users.login"
 login_manager.login_message_category = "info"
+
+# logging.basicConfig(filename="logfile.log", level=logging.DEBUG)
+
+# logging.basicConfig(filename="logfile.log", level=logging.DEBUG)
 
 
 def create_app(config_class=Config):

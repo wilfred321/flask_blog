@@ -1,3 +1,4 @@
+import pickle
 from flask_blog.users.forms import (
     PasscodeForm,
     RegistrationForm,
@@ -7,6 +8,9 @@ from flask_blog.users.forms import (
     ResetPasswordForm,
 )
 from flask_blog.models import Post, User
+
+# from flask_blog import logging
+
 from flask_login import current_user, login_required, logout_user, login_user
 from flask_blog.users.utils import (
     save_picture,
@@ -266,3 +270,55 @@ def reset_token(token):
         flash("Your account has been Updated! You are now able to login", "success")
         return redirect(url_for("users.login"))
     return render_template("reset_token.html", title="Reset Password", form=form)
+
+
+@users.route("/admin", methods=["GET", "POST"])
+def admin():
+
+    if request.method == "GET":
+        users = User.query.all()
+        user = request.args.get("user")
+        # user = session.get("user")
+        if user != None:
+
+            # flash(
+            #     f"User with username {user.username} was deleted successfully",
+            #     "success",
+            # )
+            # return render_template(
+            #     "admin.html", title="admin-interface", users=users, user=user
+            # )
+
+            return f"<h1>{user}</h1>"
+        else:
+
+            # logging.info(user_id)
+            return render_template("admin.html", title="admin-interface", users=users)
+
+    # else:
+    #     request.method = "POST"
+    #     user_id = request.args.get("user_id")
+    #     return f"<h1>User id is: {user_id}</h1>"
+
+
+@users.route("/admin_delete_user", methods=["GET", "POST"])
+def admin_delete_user():
+    if request.method == "POST":
+        user_id = request.form.get("selected_user")
+        # session["user_id"] = user_id
+        user = User.query.filter_by(id=user_id).first()
+
+        # db.session.delete(user)
+        # db.session.commit()
+
+    return redirect(url_for("users.admin", user=user))
+
+
+@users.route("/display", methods=["GET", "POST"])
+def display():
+
+    if request.method == "GET":
+        user_id = session.get("user_id")
+        # user_id = request.args.get("user_id")
+        return f"<h1>User id is {user_id}</h1>"
+    return "Noting was returned"
