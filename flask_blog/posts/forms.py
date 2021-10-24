@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 
 
 class PostForm(FlaskForm):
@@ -10,5 +10,7 @@ class PostForm(FlaskForm):
 
 
 class CommentForm(FlaskForm):
-    body = TextAreaField("Comment")
+    body = StringField(
+        "Comment", validators=[DataRequired(), Length(min=10, max=100, message=None)]
+    )
     submit = SubmitField("Reply")

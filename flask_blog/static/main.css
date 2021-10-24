@@ -201,3 +201,7 @@ a.article-title:hover {
   height:40px
 
 }
+.no-border{
+  border:none;
+  width : 400px
+}
