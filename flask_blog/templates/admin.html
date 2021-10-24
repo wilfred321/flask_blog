@@ -3,9 +3,89 @@
 
 {%block content%}
 
-<div class=" input-group container border m-auto p-4">
-    <form action="{{url_for('users.admin_delete_user')}}" method='post'>
-        <select name="selected_user" class="form-select " aria-label="Default select example">
+<div class="container border">
+
+    <div class="row border mt-2 mb-2 ml-2 mr-2">
+        <div class="col">
+
+            <small class="h5">Tag Post</small>
+
+            <form class="input-group mt-2" method='post' action="{{url_for('users.tag_user_post')}}">
+                <select name="selected_user" class="form-select form-control" aria-label="Default select example">
+
+                    <option selected>select a user to edit</option>
+                    {%for user in users%}
+                    <option value="{{user.id}}">{{user.email}}</option>
+                    {%endfor%}
+                </select>
+
+                <button class="btn btn-info">Edit</button>
+            </form>
+
+
+
+
+        </div>
+        <div class="col">
+            <small class="h5">Delete User</small>
+
+
+            <form class="input-group mt-2" method='post' action="{{url_for('users.admin_delete_user')}}">
+                <select name="selected_user" class="form-select form-control" aria-label="Default select example">
+
+                    <option selected>select a user to delete</option>
+                    {%for user in users%}
+                    <option value="{{user.id}}">{{user.email}}</option>
+                    {%endfor%}
+                </select>
+
+                <button class="btn btn-danger">Delete</button>
+            </form>
+
+
+
+            <!-- <div class="container m-0"> -->
+            <!-- {%if deleted_user %} -->
+            <!-- <div class = "container border p-2"> -->
+            <!-- <small class=""> User {{deleted_user}} was deleted successfully! </small>
+
+                {%else%} -->
+            <!-- </div> -->
+            <!-- {%endif%} -->
+            <!-- </div> -->
+        </div>
+    </div>
+    <div class="row border">
+        <div class="col">
+            {%for post in posts%}
+            <ol class="list-group list-group-numbered">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold"> {{post.title}}</div>
+                        {{post.content}}
+                    </div>
+                    <span class="badge bg-primary rounded-pill">{{post.comments.count}}</span>
+                </li>
+            </ol>
+            {%endfor%}
+        </div>
+
+        <div class="col">
+            col2
+        </div>
+        <!-- {%if user%}
+        username: {{user.username}}
+        email: {{ user.email }}
+
+        {%endif%} -->
+    </div>
+</div>
+
+
+<!-- <div class="container border m-auto p-4">
+
+    <form class="input-group" method='post' action="{{url_for('users.admin_delete_user')}}">
+        <select name="selected_user" class="form-select form-control" aria-label="Default select example">
 
             <option selected>select a user</option>
             {%for user in users%}
@@ -13,19 +93,14 @@
             {%endfor%}
         </select>
 
-
         <button class="btn btn-danger">Delete</button>
     </form>
 
+</div> -->
 
 
-</div>
 
-{%if deleted_user %}
-<!-- <div class = "container border p-2"> -->
-<p class="display-4"> User {{deleted_user}} was deleted successfully! </p>
 
-{%else%}
-<!-- </div> -->
-{%endif%}
+
+
 {%endblock%}

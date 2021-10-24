@@ -188,3 +188,16 @@ a.article-title:hover {
    background:#fff; 
    padding:0 10px; 
 }
+
+.comment-submit{
+
+  width:60px;
+  height:40px
+
+}
+.comment-input{
+
+  width:600px;
+  height:40px
+
+}

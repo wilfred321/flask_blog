@@ -309,12 +309,14 @@ def admin():
 def admin_delete_user():
     if request.method == "POST":
         user_id = request.form.get("selected_user")
+
         # session["user_id"] = user_id
         user = User.query.filter_by(id=user_id).first()
         username = user.username
         db.session.delete(user)
         db.session.commit()
         save_user("deleted_users.txt", user)
+        flash(f"User {username} deleted successfully", "success")
 
     return redirect(url_for("users.admin", deleted_user=username))
 
@@ -327,3 +329,12 @@ def display():
         # user_id = request.args.get("user_id")
         return f"<h1>User id is {user_id}</h1>"
     return "Noting was returned"
+
+
+@users.route("/admin/tag_user", methods=["GET", "POST"])
+def tag_user_post():
+    if request.method == "POST":
+        user_id = request.form.get("selected_user")
+        user = User.query.get_or_404(user_id)
+        posts = Post.query.filter_by(user_id=user_id)
+    return render_template("admin.html", posts=posts, user=user)

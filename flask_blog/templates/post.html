@@ -44,12 +44,14 @@
     </div>
     <div>
 
-      <form method="POST" action="{{url_for('posts.comment', post_id=post_id)}}">
+      <!-- POST COMMENT SECTION -->
+
+      <form method="POST" action="{{url_for('posts.comment', post_id = post.id)}}">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-          <div class="form-group">
+          <div class="form-group m-auto p-0">
             {% if form.body.errors %}
-            {{ form.body(class="form-control form-control-lg is-invalid") }}
+            {{ form.body(class="form-control is-invalid") }}
             <div class="invalid-feedback">
               {% for error in form.body.errors %}
               <span>{{ error }}</span>
@@ -58,8 +60,8 @@
             {% else %}
 
 
-            <div class="input-group mb-3">
-              {{ form.body(class="form-control form-control-lg" , placeholder="Enter your comment here") }}
+            <div class="input-group input-group-sm mb-0">
+              {{ form.body(class="form-control", placeholder="Enter your comment here") }}
               {{ form.submit(class="btn btn-outline-info ") }}
 
             </div>
@@ -78,6 +80,7 @@
     </div>
 </article>
 
+<!-- DISPLAY COMMENT SECTION -->
 
 {%if not post.comments%}
 No comments
@@ -89,7 +92,8 @@ No comments
     src="{{url_for('static',filename='profile_pics/' + post.commenter.image_file)}}">
   <div class="media-body">
     <div class="article-metadata">
-      <a class="mr-2" href="{{url_for('user_posts', username=post.commenter.username)}}">{{ post.commenter.username
+      <a class="mr-2" href="{{url_for('users.user_posts', username=post.commenter.username)}}">{{
+        post.commenter.username
         }}</a>
       <small class="text-muted">{{ post.timestamp.strftime('%Y-%m-%d | %H: %M' ) }}</small>
     </div>
