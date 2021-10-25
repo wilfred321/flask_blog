@@ -69,12 +69,34 @@ def send_passcode(user_email, passcode):
     mail.send(msg)
 
 
-from datetime import datetime
+from datetime import datetime, date
+from pathlib import Path
+import json
+
+
+def json_serial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    raise TypeError("Type %s not serializable" % type(obj))
 
 
 def save_user(filename, user):
     with open(filename, "a") as file:
         file.write(f"{user.username}, {user.email}, {datetime.now()} \n")
+
+
+def save_user_json(filename, user):
+    saved_user = [
+        {
+            "username": user.username,
+            "user_email": user.email,
+            "date_created": datetime.now(),
+        }
+    ]
+
+    data = json.dumps(saved_user, default=json_serial)
+    Path(filename).write_text(data)
 
 
 # REGISTER APP FOR OAUTH

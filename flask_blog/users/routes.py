@@ -1,4 +1,6 @@
 import pickle
+from pathlib import Path
+
 from flask_blog.users.forms import (
     PasscodeForm,
     RegistrationForm,
@@ -19,6 +21,7 @@ from flask_blog.users.utils import (
     send_passcode,
     generate_passcode,
     save_user,
+    save_user_json,
 )
 
 
@@ -60,7 +63,17 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
-        save_user("registered_users.txt", user)
+
+        # set txt filename to write to
+        registered_filename_txt = (
+            "./flask_blog/static/users_records/registered_users.txt"
+        )
+        registered_filename_json = (
+            "./flask_blog/static/users_records/registered_users.json"
+        )
+
+        save_user(registered_filename_txt, user)
+        save_user_json(registered_filename_json, user)
         send_account_created_email(user)
         flash(
             "Your account has been created! Please confirm and proceed to login.",
@@ -315,7 +328,10 @@ def admin_delete_user():
         username = user.username
         db.session.delete(user)
         db.session.commit()
-        save_user("deleted_users.txt", user)
+        deleted_filename_txt = "./flask_blog/static/users_records/deleted_users.txt"
+        deleted_filename_json = "./flask_blog/static/users_records/deleted_users.json"
+        save_user(deleted_filename_txt, user)
+        save_user_json(deleted_filename_json, user)
         flash(f"User {username} deleted successfully", "success")
 
     return redirect(url_for("users.admin", deleted_user=username))
@@ -324,10 +340,48 @@ def admin_delete_user():
 @users.route("/display", methods=["GET", "POST"])
 def display():
 
-    if request.method == "GET":
-        user_id = session.get("user_id")
-        # user_id = request.args.get("user_id")
-        return f"<h1>User id is {user_id}</h1>"
+    if request.method == "POST":
+        user_type = request.form.get("selected_user")
+        if user_type == "registered_users":
+            # with open("registered_users.txt", "r") as file:
+            #     data = file.readline()
+            #     data.strip()
+            return "<h1>Selected user is Registered User</h1>"
+
+        elif user_type == "deleted_users":
+            with open("deleted_users.txt", "r") as file:
+                deleted_users = file.readlines()
+
+                #     user_info = {}
+                #     for user in deleted_users:
+
+                #         data = user.split(",")
+                # return f""" ('username: {data[0]}')
+                # ('email: {data[1]}')
+                # 'data_posted: {data[2]}')"""
+
+                # data = f.split("\n")
+
+                # for item in data:
+                #     print(item)
+                # data.strip()
+
+                # user_info["username"] = data[0]
+                # user_info["email"] = data[1]
+                # user_info["data_deleted"] = data[2]
+                # user_info["time_deleted"] = data[3]
+
+                # print(f"<h1>{(deleted_users)}</h1>")
+            return "<h1>Selected user is Deleted User</h1>"
+
+        else:
+            return "user type is none of the above"
+
+    return render_template("admin.html", title="admin-interface")
+
+    # user_id = request.args.get("user_id")
+    # return a dictionary containing the username information
+
     return "Noting was returned"
 
 

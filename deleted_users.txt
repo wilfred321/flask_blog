@@ -1,8 +1,0 @@
-
-user41, user41@demo.com, 2021-10-23 21:17:38.999268 
-wilfrednew, owobuwilfred@gmalllllll.com, 2021-10-23 21:18:14.836906 
-user39, user39@demo.com, 2021-10-24 00:40:16.719631 
-user38, user38@demo.com, 2021-10-24 01:23:10.569620 
-Test User, testuser@demo.com, 2021-10-24 01:45:12.354550 
-Jane Doe, janedoe@demo.com, 2021-10-24 01:45:53.580341 
-traversalnewuser, traversaltechnologiesltd@gmail.com, 2021-10-24 01:56:33.926843 
