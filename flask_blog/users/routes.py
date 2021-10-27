@@ -1,7 +1,6 @@
 import pickle
 from pathlib import Path
 
-
 from flask_blog.users.forms import (
     PasscodeForm,
     RegistrationForm,
@@ -26,21 +25,9 @@ from flask_blog.admin.utils import save_user_json, save_user
 
 
 from flask_blog import db, bcrypt, mail, oauth
-from flask import (
-    Blueprint,
-    render_template,
-    redirect,
-    flash,
-    url_for,
-    request,
-    session,
-)
+from flask import Blueprint, render_template, redirect, flash, url_for, request, session
 
 import flask_blog
-from flask_blog import create_app
-
-app = create_app
-# from run import app
 
 users = Blueprint("users", __name__)
 
@@ -60,8 +47,8 @@ google = oauth.register(
 new_passcode = generate_passcode()
 
 # set txt filename to write to
-registered_filename_txt = app.Config["REGISTERED_TXT"]
-registered_filename_json = app.Config["REGISTERED_JSON"]
+registered_filename_txt = "./flask_blog/static/users_records/registered_users.txt"
+registered_filename_json = "./flask_blog/static/users_records/registered_users.json"
 
 
 @users.route("/register", methods=["GET", "POST"])

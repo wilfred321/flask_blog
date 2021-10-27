@@ -1,20 +1,22 @@
 from flask import Blueprint
-from flask import render_template, url_for, flash, redirect, request, current_app
+from flask import render_template, url_for, flash, redirect, request
 from flask_blog import db
 from flask_blog.models import User, Post
 from flask_blog.admin.utils import save_user_json, save_user, extract_users
-from run import app
 
 
 admin = Blueprint("admin", __name__)
 
 
-deleted_filename_txt = app.Config["DELETED_TXT"]
-deleted_filename_json = app.Config["DELETED_JSON"]
+deleted_filename_txt = "./flask_blog/static/users_records/deleted_users.txt"
+deleted_filename_json = "./flask_blog/static/users_records/deleted_users.json"
+
+registered_filename_txt = "./flask_blog/static/users_records/registered_users.txt"
+registered_filename_json = "./flask_blog/static/users_records/registered_users.json"
 
 
 @admin.route("/admin", methods=["GET", "POST"])
-def admin():
+def admin_():
 
     if request.method == "GET":
         users = User.query.all()
@@ -59,7 +61,7 @@ def admin_delete_user():
         save_user_json(deleted_filename_json, user)
         flash(f"User {username} deleted successfully", "success")
 
-    return redirect(url_for("users.admin", deleted_user=username))
+    return redirect(url_for("admin.admin", deleted_user=username))
 
 
 @admin.route("/display", methods=["GET", "POST"])
