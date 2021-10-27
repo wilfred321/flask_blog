@@ -10,7 +10,7 @@
 
             <small class="h5">Tag Post</small>
 
-            <form class="input-group mt-2" method='post' action="{{url_for('users.tag_user_post')}}">
+            <form class="input-group mt-2" method='post' action="{{url_for('admin.tag_user_post')}}">
                 <select name="selected_user" class="form-select form-select-sm form-control-sm"
                     aria-label="Default select example">
 
@@ -31,7 +31,7 @@
             <small class="h5">Delete User</small>
 
 
-            <form class="input-group mt-2" method='post' action="{{url_for('users.admin_delete_user')}}">
+            <form class="input-group mt-2" method='post' action="{{url_for('admin.admin_delete_user')}}">
                 <select name="selected_user" class="form-select form-select-sm form-control-sm"
                     aria-label="Default select example">
 
@@ -64,7 +64,7 @@
 
             <small class="h5">Delete Post </small>
 
-            <form class="input-group mt-2 mb-3 ml-2" method='post' action="{{url_for('users.display')}}">
+            <form class="input-group mt-2 mb-3 ml-2" method='post' action="{{url_for('admin.display')}}">
                 <select name="selected_user" class="form-select form-select-sm form-control-sm"
                     aria-label="Default select example">
 
@@ -86,7 +86,7 @@
 
             <small class="h5">Select Log </small>
 
-            <form class="input-group mt-2 mb-3 ml-2" method='post' action="{{url_for('users.display')}}">
+            <form class="input-group mt-2 mb-3 ml-2" method='post' action="{{url_for('admin.display')}}">
                 <select name="selected_user" class="form-select form-select-sm form-control-sm"
                     aria-label="Default select example">
 
@@ -122,6 +122,37 @@
                 </li>
             </ul>
             {%endfor%}
+        </div>
+
+
+        <div class="col ml-0 mt-2 mb-2">
+            {%if registered_users%}
+            {%for user in registered_users%}
+            <ul class="list-group list-group-numbered">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold"> {{user.username}}</div>
+                        {{user.user_email}}
+                    </div>
+                    <span class="badge bg-primary rounded-pill">{{user.date_created}}</span>
+                </li>
+            </ul>
+            {%endfor%}
+            {%else%}
+            {%if deleted_users%}
+            {%for user in deleted_users%}
+            <ul class="list-group list-group-numbered">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold"> {{user.username}}</div>
+                        {{user.user_email}}
+                    </div>
+                    <span class="badge bg-primary rounded-pill">{{user.date_created}}</span>
+                </li>
+            </ul>
+            {%endfor%}
+            {%endif%}
+            {%endif%}
         </div>
     </div>
 </div>

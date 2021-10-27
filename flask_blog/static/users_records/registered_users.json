@@ -1,1 +1,27 @@
-[{"username": "OWOBUWIL", "user_email": "OWOBUWO@GMIAL.COM", "date_created": "2021-10-26T00:11:54.480505"}]
+[
+    {
+        "username": "owos",
+        "user_email": "owobuwilfred@example.com",
+        "date_created": "2021-10-27T21:13:18.083720"
+    },
+    {
+        "username": "admin123",
+        "user_email": "admin123@gmail.com",
+        "date_created": "2021-10-27T21:13:34.065558"
+    },
+    {
+        "username": "admin12",
+        "user_email": "admin12@gmail.com",
+        "date_created": "2021-10-27T21:14:05.108791"
+    },
+    {
+        "username": "wilfred23",
+        "user_email": "oeobeilwrer@gmail.com",
+        "date_created": "2021-10-27T21:14:16.847767"
+    },
+    {
+        "username": "wilf@gmail.com",
+        "user_email": "wilf@gmail.com",
+        "date_created": "2021-10-27T21:15:15.753225"
+    }
+]
