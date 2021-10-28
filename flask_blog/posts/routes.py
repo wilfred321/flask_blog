@@ -30,7 +30,18 @@ def post(post_id):
     post = Post.query.get_or_404(post_id)
     post_id = post.id
     form = CommentForm()
-    return render_template("post.html", form=form, title=post.title, post=post)
+
+    # return the number of comment for the selected post
+    comments = Comment.query.filter_by(post_id=post_id)
+    comments_count = comments.count()
+
+    return render_template(
+        "post.html",
+        form=form,
+        title=post.title,
+        post=post,
+        comments_count=comments_count,
+    )
 
 
 @posts.route("/post/<int:post_id>/update", methods=["GET", "POST"])

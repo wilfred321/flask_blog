@@ -56,4 +56,4 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
 
     def __repr__(self):
-        return f"Comment ('{self.body}','{self.date_posted}', '{self.user_id}',{self.post_id}')"
+        return f"Comment ('{self.body}','{self.timestamp}', '{self.user_id}',{self.post_id}')"

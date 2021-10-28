@@ -207,3 +207,8 @@ a.article-title:hover {
   border:none;
   width : 400px
 }
+
+.comment{
+  float: right;
+  margin-right:10px
+}

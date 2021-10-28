@@ -85,28 +85,7 @@ def display():
                 "users_log.html", title="deleted_users", deleted_users=deleted_users
             )
 
-            #     user_info = {}
-            #     for user in deleted_users:
-
-            #         data = user.split(",")
-            # return f""" ('username: {data[0]}')
-            # ('email: {data[1]}')
-            # 'data_posted: {data[2]}')"""
-
-            # data = f.split("\n")
-
-            # for item in data:
-            #     print(item)
-            # data.strip()
-
-            # user_info["username"] = data[0]
-            # user_info["email"] = data[1]
-            # user_info["data_deleted"] = data[2]
-            # user_info["time_deleted"] = data[3]
-
-            # print(f"<h1>{(deleted_users)}</h1>")
-            # return "<h1>Selected user is Deleted User</h1>"
-
+         
         else:
             return "user type is none of the above"
 
