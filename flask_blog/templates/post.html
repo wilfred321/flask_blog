@@ -14,6 +14,8 @@
       <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d | %H: %M' ) }}</small>
 
       <div class="comment"> <i class="far fa-comment-dots pr-2"></i><a>{{comments_count}}</a></div>
+
+      <div class="comment"> <i class="far fa-heart pr-2" name=''></i></div>
       {%if current_user == post.author%}
       <div>
         <a class="btn btn-secondary btn-sm m-1" href="{{url_for('posts.update_post', post_id = post.id )}}">Update</a>

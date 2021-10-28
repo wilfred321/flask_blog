@@ -93,3 +93,17 @@ def comment(post_id):
             db.session.commit()
             flash("You replied to this post", "success")
     return redirect(url_for("posts.post", post_id=post.id))
+
+
+@posts.route("/like/<int:post_id>/<action>")
+def like_action(post_id, action):
+    post = Post.query.filter_by(id=post_id).first_or_404()
+    if action == "like":
+        current_user.like_post(post)
+        db.session.commit()
+
+    elif action == "unlike":
+        current_user.unlike_post(post)
+        db.session.commit()
+
+    return redirect(request.referrer)

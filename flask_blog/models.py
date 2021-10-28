@@ -18,6 +18,27 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(100), nullable=False)
     posts = db.relationship("Post", backref="author", lazy=True)
     comments = db.relationship("Comment", backref="commenter", lazy=True)
+    liked = db.relationship("PostLike", backref="liker", lazy=True)
+
+    # liked and unliked post method
+    def has_liked_post(self, post):
+        return (
+            PostLike.query.filter(
+                PostLike.user_id == self.id, PostLike.post_id == post.id
+            ).count
+            > 0
+        )
+
+    def like_post(self, post):
+        if not self.has_liked_post(post):
+            like = PostLike(user_id=self.id, post_id=post.id)
+            db.session.add(like)
+            db.session.commit()
+
+    def unlike_post(self, post):
+        if self.has_liked_post():
+            PostLike.query.filter_by(user_id=self.id, post_id=post.id).delete()
+            db.session.commit()
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config["SECRET_KEY"], expires_sec)
@@ -43,6 +64,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"))
     comments = db.relationship("Comment", backref="comment", lazy=True)
+    liked = db.relationship("PostLike", backref="liked", lazy=True)
 
     def __repr__(self):
         return f"Post('{self.title}','{self.date_posted}')"
@@ -57,3 +79,9 @@ class Comment(db.Model):
 
     def __repr__(self):
         return f"Comment ('{self.body}','{self.timestamp}', '{self.user_id}',{self.post_id}')"
+
+
+class PostLike(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
