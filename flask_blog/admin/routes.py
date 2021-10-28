@@ -72,12 +72,18 @@ def display():
         if user_type == "registered_users":
             registered_users = extract_users(registered_filename_json)
 
-            return render_template("admin.html", registered_users=registered_users)
+            return render_template(
+                "users_log.html",
+                title="registered_users",
+                registered_users=registered_users,
+            )
 
         elif user_type == "deleted_users":
 
             deleted_users = extract_users(deleted_filename_json)
-            return render_template("admin.html", deleted_users=deleted_users)
+            return render_template(
+                "users_log.html", title="deleted_users", deleted_users=deleted_users
+            )
 
             #     user_info = {}
             #     for user in deleted_users:
