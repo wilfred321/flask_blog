@@ -13,9 +13,25 @@
 
       <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d | %H: %M' ) }}</small>
 
-      <div class="comment"> <i class="far fa-comment-dots pr-2"></i><a>{{comments_count}}</a></div>
+      <div class="comment"><i class="far fa-comment-dots pr-2"></i> <a>{{comments_count}}</a></div>
 
-      <div class="comment"> <i class="far fa-heart pr-2" name=''></i></div>
+      <div class="comment  pr-2">
+        {%if current_user.is_authenticated %}
+        {%if current_user.has_liked_post(post)%}
+        <a href="{{url_for('posts.like_action', post_id = post.id, action = 'unlike')}}"
+          class="fas fa-heart pr-2 text-decoration-none"></a>
+        {%else%}
+        <a href="{{url_for('posts.like_action', post_id = post.id, action = 'like')}}"
+          class="far fa-heart pr-2 text-decoration-none"></a>
+        {%endif%}
+        {{post.likes.count()}}
+        {%endif%}
+
+
+
+
+
+      </div>
       {%if current_user == post.author%}
       <div>
         <a class="btn btn-secondary btn-sm m-1" href="{{url_for('posts.update_post', post_id = post.id )}}">Update</a>

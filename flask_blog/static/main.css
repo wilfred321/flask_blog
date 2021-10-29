@@ -210,5 +210,16 @@ a.article-title:hover {
 
 .comment{
   float: right;
-  margin-right:10px
+  margin-right:10px;
+  text-decoration: none;
+
 }
+.liked{
+  background-color: red;
+}
+
+.unliked{
+  background-color: white;
+}
+
+

@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from sqlalchemy.orm import dynamic_loader
 from flask_blog import db, login_manager
 from flask import current_app, jsonify
 from flask_login import UserMixin
@@ -18,14 +20,14 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(100), nullable=False)
     posts = db.relationship("Post", backref="author", lazy=True)
     comments = db.relationship("Comment", backref="commenter", lazy=True)
-    liked = db.relationship("PostLike", backref="liker", lazy=True)
+    liked = db.relationship("PostLike", backref="user", lazy="dynamic")
 
     # liked and unliked post method
     def has_liked_post(self, post):
         return (
             PostLike.query.filter(
                 PostLike.user_id == self.id, PostLike.post_id == post.id
-            ).count
+            ).count()
             > 0
         )
 
@@ -36,7 +38,7 @@ class User(db.Model, UserMixin):
             db.session.commit()
 
     def unlike_post(self, post):
-        if self.has_liked_post():
+        if self.has_liked_post(post):
             PostLike.query.filter_by(user_id=self.id, post_id=post.id).delete()
             db.session.commit()
 
@@ -64,7 +66,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"))
     comments = db.relationship("Comment", backref="comment", lazy=True)
-    liked = db.relationship("PostLike", backref="liked", lazy=True)
+    likes = db.relationship("PostLike", backref="post", lazy="dynamic")
 
     def __repr__(self):
         return f"Post('{self.title}','{self.date_posted}')"
